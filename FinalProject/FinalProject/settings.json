@@ -1,0 +1,6 @@
+{
+    "snyk.advanced.autoSelectOrganization": true,
+    "java.project.sourcePaths": [
+        ".vscode/data"
+    ]
+}
