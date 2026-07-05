@@ -22,10 +22,11 @@ def download_documentation():
         print("HTTP Status Code:", response.status_code)
 
         if response.status_code == 200:
+            response.encoding = response.apparent_encoding or "utf-8"
+            content = response.text
 
             with open(SAVE_PATH, "w", encoding="utf-8") as file:
-
-                file.write(response.text)
+                file.write(content)
 
             print("Download completed.")
             print("Saved to:", SAVE_PATH)

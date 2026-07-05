@@ -1,8 +1,32 @@
+from pathlib import Path
+
 from collector import download_documentation
 from parser import parse_html
+from Extractor import (
+    export_links_to_csv,
+    export_sections_to_csv,
+    extract_link_rows,
+    extract_links,
+    extract_sections,
+)
 
 download_documentation()
 
 soup = parse_html()
+sections = extract_sections(soup)
+links = extract_links(soup)
+link_rows = extract_link_rows(soup)
 
-print("\nFeatures 1 and 2 completed successfully.")
+output_dir = Path("data/processed")
+output_dir.mkdir(parents=True, exist_ok=True)
+
+export_sections_to_csv(sections, output_dir / "sections.csv")
+export_links_to_csv(link_rows, output_dir / "links.csv")
+
+print(f"\nExtracted {len(sections)} sections and {len(links)} links.")
+print("Sample sections:")
+for section in sections[:5]:
+    print(f"- {section['section_title']}")
+print(f"Saved processed outputs to: {output_dir}")
+
+print("\nFeatures 1, 2, 3, and 4 completed successfully.")
