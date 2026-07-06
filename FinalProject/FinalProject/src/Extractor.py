@@ -162,19 +162,24 @@ def export_links_to_csv(link_rows, output_path):
 def extract_python_code(html_or_soup):
     soup = _ensure_soup(html_or_soup)
     python_code = []
+    example_id = 0
 
-    for i, pre in enumerate(soup.find_all("pre"), start=1): 
-        code = pre.get_text("\n", strip=True)
+    for pre in soup.find_all("pre"):
+        code = pre.get_text().strip()
 
         if not code:
             continue
 
+        example_id += 1
         section = pre.find_parent("section")
         section_title = ""
-
+        if section:
+            heading = section.find(["h1", "h2", "h3", "h4", "h5", "h6"])
+            if heading:
+                section_title = heading.get_text(" ", strip=True)
         python_code.append({
-            "example_id": i, 
-            "section_title": section_title, 
+            "example_id": example_id,
+            "section_title": section_title,
             "code_text": code, 
             "line_count": len(code.splitlines()), 
             "contains_find_all": "find_all(" in code, 
