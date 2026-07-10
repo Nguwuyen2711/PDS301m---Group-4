@@ -158,3 +158,58 @@ def export_links_to_csv(link_rows, output_path):
             df[column] = ""
     df = df[expected_columns]
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
+
+def extract_python_code(html_or_soup):
+    soup = _ensure_soup(html_or_soup)
+    python_code = []
+    example_id = 0
+
+    for pre in soup.find_all("pre"):
+        code = pre.get_text().strip()
+
+        if not code:
+            continue
+
+        example_id += 1
+        section = pre.find_parent("section")
+        section_title = ""
+        if section:
+            heading = section.find(["h1", "h2", "h3", "h4", "h5", "h6"])
+            if heading:
+                section_title = heading.get_text(" ", strip=True)
+        python_code.append({
+            "example_id": example_id,
+            "section_title": section_title,
+            "code_text": code, 
+            "line_count": len(code.splitlines()), 
+            "contains_find_all": "find_all(" in code, 
+            "contains_find": "find(" in code, 
+            "contains_select": "select(" in code, 
+            "contains_get_text": "get_text(" in code, 
+             "contains_requests": "requests" in code, })
+    return python_code
+
+def export_examples_to_csv(sections, output_path):
+    """Write examples sections to a CSV file with the required schema."""
+    os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
+
+    df = pd.DataFrame(sections)
+    for column in df.columns:
+        if df[column].dtype == "object":
+            df[column] = df[column].apply(_normalize_text)
+    expected_columns = [
+        "example_id",
+        "section_title",
+        "code_text",
+        "line_count",
+        "contains_find_all",
+        "contains_find",
+        "contains_select",
+        "contains_get_text",
+        "contains_requests"
+    ]
+    for column in expected_columns:
+        if column not in df.columns:
+            df[column] = ""
+    df = df[expected_columns]
+    df.to_csv(output_path, index=False, encoding="utf-8-sig")
