@@ -1,11 +1,14 @@
 import os
 import requests
-
+from pathlib import Path
 
 URL = "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
 
-SAVE_PATH = "FinalProject/FinalProject/data/raw/beautifulsoup_doc.html"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
+HTML_PATH = RAW_DIR / "beautifulsoup_doc.html"
 
 def download_documentation():
 
@@ -25,11 +28,11 @@ def download_documentation():
             response.encoding = response.apparent_encoding or "utf-8"
             content = response.text
 
-            with open(SAVE_PATH, "w", encoding="utf-8") as file:
+            with open(HTML_PATH, "w", encoding="utf-8") as file:
                 file.write(content)
 
             print("Download completed.")
-            print("Saved to:", SAVE_PATH)
+            print("Saved to:", HTML_PATH)
 
         else:
 

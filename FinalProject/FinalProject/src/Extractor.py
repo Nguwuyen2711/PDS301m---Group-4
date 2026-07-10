@@ -1,8 +1,12 @@
 import os
+from pathlib import Path
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_DIR = PROJECT_ROOT / "data" / "processed" 
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 def _normalize_text(value):
     if value is None:
@@ -32,7 +36,7 @@ def _ensure_soup(html_or_soup):
 
 
 def extract_sections(html_or_soup):
-    """Extract meaningful sections from HTML content."""
+    # Extract meaningful sections from HTML content.
     soup = _ensure_soup(html_or_soup)
     sections = []
 
@@ -69,7 +73,7 @@ def extract_sections(html_or_soup):
 
 
 def extract_links(html_or_soup):
-    """Extract all hyperlink targets from HTML content."""
+    # Extract all hyperlink targets from HTML content.
     soup = _ensure_soup(html_or_soup)
     links = []
 
@@ -82,7 +86,7 @@ def extract_links(html_or_soup):
 
 
 def extract_link_rows(html_or_soup):
-    """Extract hyperlink rows with link text, href, type, and containing section title."""
+    # Extract hyperlink rows with link text, href, type, and containing section title.
     soup = _ensure_soup(html_or_soup)
     rows = []
 
@@ -120,9 +124,8 @@ def extract_link_rows(html_or_soup):
     return rows
 
 
-def export_sections_to_csv(sections, output_path):
-    """Write extracted sections to a CSV file with the required schema."""
-    os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
+def export_sections_to_csv(sections, filename):
+    # Write extracted sections to a CSV file with the required schema.
 
     df = pd.DataFrame(sections)
     for column in df.columns:
@@ -141,12 +144,12 @@ def export_sections_to_csv(sections, output_path):
         if column not in df.columns:
             df[column] = ""
     df = df[expected_columns]
+    output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
 
 
-def export_links_to_csv(link_rows, output_path):
-    """Write extracted links to a CSV file with the required schema."""
-    os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
+def export_links_to_csv(link_rows, filename):
+    # Write extracted links to a CSV file with the required schema.
 
     df = pd.DataFrame(link_rows)
     for column in df.columns:
@@ -157,6 +160,7 @@ def export_links_to_csv(link_rows, output_path):
         if column not in df.columns:
             df[column] = ""
     df = df[expected_columns]
+    output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
 
 def extract_python_code(html_or_soup):
@@ -189,9 +193,8 @@ def extract_python_code(html_or_soup):
              "contains_requests": "requests" in code, })
     return python_code
 
-def export_examples_to_csv(sections, output_path):
-    """Write examples sections to a CSV file with the required schema."""
-    os.makedirs(os.path.dirname(output_path), exist_ok=True) if os.path.dirname(output_path) else None
+def export_examples_to_csv(sections, filename):
+    # Write examples sections to a CSV file with the required schema.
 
     df = pd.DataFrame(sections)
     for column in df.columns:
@@ -212,4 +215,5 @@ def export_examples_to_csv(sections, output_path):
         if column not in df.columns:
             df[column] = ""
     df = df[expected_columns]
+    output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")

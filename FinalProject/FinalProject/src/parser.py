@@ -1,8 +1,12 @@
 from bs4 import BeautifulSoup
 
+from pathlib import Path
 
-HTML_PATH = "FinalProject/FinalProject/data/raw/beautifulsoup_doc.html"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
+HTML_PATH = RAW_DIR / "beautifulsoup_doc.html"
 
 def _read_html_text(path):
     with open(path, "rb") as file:
@@ -12,7 +16,6 @@ def _read_html_text(path):
         return raw_bytes.decode("utf-8")
     except UnicodeDecodeError:
         return raw_bytes.decode("latin-1")
-
 
 def parse_html():
 

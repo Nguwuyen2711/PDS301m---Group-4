@@ -1,8 +1,6 @@
-from pathlib import Path
-
-from collector import download_documentation
-from parser import parse_html
-from Extractor import (
+from .collector import download_documentation
+from .parser import parse_html
+from .extractor import (
     export_links_to_csv,
     export_sections_to_csv,
     extract_link_rows,
@@ -12,9 +10,17 @@ from Extractor import (
     export_examples_to_csv
 )
 
-download_documentation()
+# Feature 1
+def download_html():
+    download_documentation()
+    print
 
-soup = parse_html()
+# Feature 2
+def html_parser():
+    soup = parse_html()
+    return soup
+
+soup = html_parser()
 sections = extract_sections(soup)
 links = extract_links(soup)
 link_rows = extract_link_rows(soup)
@@ -22,19 +28,12 @@ link_rows = extract_link_rows(soup)
 #function 5
 python_code = extract_python_code(soup)
 
-output_dir = Path("FinalProject/FinalProject/data/processed")
-output_dir.mkdir(parents=True, exist_ok=True)
+def sections_to_csv():
+    export_sections_to_csv(sections, "sections.csv")
 
-export_sections_to_csv(sections, output_dir / "sections.csv")
-export_links_to_csv(link_rows, output_dir / "links.csv")
+def links_to_csv():
+    export_links_to_csv(link_rows, "links.csv")
 
 #function 5
-export_examples_to_csv(python_code, output_dir / "code_examples.csv")
-
-print(f"\nExtracted {len(sections)} sections and {len(links)} links.")
-print("Sample sections:")
-for section in sections[:5]:
-    print(f"- {section['section_title']}")
-print(f"Saved processed outputs to: {output_dir}")
-
-print("\nFeatures 1, 2, 3, and 4 completed successfully.")
+def code_samples_to_csv():
+    export_examples_to_csv(python_code, "code_examples.csv")
