@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 
-HTML_PATH = "data/raw/beautifulsoup_doc.html"
+HTML_PATH = "FinalProject/FinalProject/data/raw/beautifulsoup_doc.html"
 
 
 def _read_html_text(path):

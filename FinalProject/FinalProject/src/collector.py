@@ -4,7 +4,7 @@ import requests
 
 URL = "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
 
-SAVE_PATH = "data/raw/beautifulsoup_doc.html"
+SAVE_PATH = "FinalProject/FinalProject/data/raw/beautifulsoup_doc.html"
 
 
 def download_documentation():

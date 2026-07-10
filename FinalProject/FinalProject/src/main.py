@@ -22,7 +22,7 @@ link_rows = extract_link_rows(soup)
 #function 5
 python_code = extract_python_code(soup)
 
-output_dir = Path("data/processed")
+output_dir = Path("FinalProject/FinalProject/data/processed")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 export_sections_to_csv(sections, output_dir / "sections.csv")
