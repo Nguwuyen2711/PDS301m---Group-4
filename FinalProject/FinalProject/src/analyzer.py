@@ -82,9 +82,7 @@ def count_get_text():
     count = df3["contains_get_text"].sum()
     print(count)
     return count
-
-
-    print(count)    
+  
 #2 additions
 #Q9. What is the average, minimum, maximum, and standard deviation of section word counts?
 def word_count_statistics():
