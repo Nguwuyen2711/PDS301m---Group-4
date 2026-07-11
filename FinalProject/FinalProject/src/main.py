@@ -1,14 +1,27 @@
-from .collector import download_documentation
-from .parser import parse_html as parse_html_document
-from .extractor import (
-    export_links_to_csv,
-    export_sections_to_csv,
-    extract_link_rows,
-    extract_links,
-    extract_sections,
-    extract_python_code,
-    export_examples_to_csv,
-)
+try:
+    from .collector import download_documentation
+    from .parser import parse_html as parse_html_document
+    from .Extractor import (
+        export_examples_to_csv,
+        export_links_to_csv,
+        export_sections_to_csv,
+        extract_link_rows,
+        extract_links,
+        extract_python_code,
+        extract_sections,
+    )
+except ImportError:
+    from collector import download_documentation
+    from parser import parse_html as parse_html_document
+    from Extractor import (
+        export_examples_to_csv,
+        export_links_to_csv,
+        export_sections_to_csv,
+        extract_link_rows,
+        extract_links,
+        extract_python_code,
+        extract_sections,
+    )
 
 soup = None
 sections = None
@@ -45,3 +58,22 @@ def links_to_csv():
 def code_samples_to_csv():
     _ensure_parsed(False)
     export_examples_to_csv(python_code, "code_examples.csv")
+
+
+def main():
+    download_html()
+    _ensure_parsed(False)
+    export_sections_to_csv(sections, "sections.csv")
+    export_links_to_csv(link_rows, "links.csv")
+    export_examples_to_csv(python_code, "code_examples.csv")
+
+    print(f"\nExtracted {len(sections)} sections and {len(links)} links.")
+    print("Sample sections:")
+    for section in sections[:5]:
+        print(f"- {section['section_title']}")
+
+    print("\nFeatures completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
