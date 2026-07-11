@@ -17,16 +17,17 @@ def _read_html_text(path):
     except UnicodeDecodeError:
         return raw_bytes.decode("latin-1")
 
-def parse_html():
-
-    print("\n" + "=" * 50)
-    print("FEATURE 2 - HTML PARSER")
-    print("=" * 50)
+def parse_html(verbose=True):
+    if verbose:
+        print("\n" + "=" * 50)
+        print("FEATURE 2 - HTML PARSER")
+        print("=" * 50)
 
     html = _read_html_text(HTML_PATH)
 
     soup = BeautifulSoup(html, "html.parser")
 
-    print("HTML parsed successfully.")
+    if verbose:
+        print("HTML parsed successfully.")
 
     return soup

@@ -146,6 +146,7 @@ def export_sections_to_csv(sections, filename):
     df = df[expected_columns]
     output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    print(f"File written to {output_path}")
 
 
 def export_links_to_csv(link_rows, filename):
@@ -162,6 +163,7 @@ def export_links_to_csv(link_rows, filename):
     df = df[expected_columns]
     output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    print(f"File written to {output_path}")
 
 def extract_python_code(html_or_soup):
     soup = _ensure_soup(html_or_soup)
@@ -217,3 +219,4 @@ def export_examples_to_csv(sections, filename):
     df = df[expected_columns]
     output_path = RAW_DIR / filename
     df.to_csv(output_path, index=False, encoding="utf-8-sig")
+    print(f"File written to {output_path}")

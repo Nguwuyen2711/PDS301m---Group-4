@@ -2,13 +2,16 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-OUTPUT_DIR = "FinalProject/FinalProject/output/charts"
-INPUT_DIR = "FinalProject/FinalProject/data/processed"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+INPUT_DIR = BASE_DIR / "data" / "processed"
+OUTPUT_DIR = BASE_DIR / "output" / "charts"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-sections = pd.read_csv(os.path.join(INPUT_DIR, "sections.csv"))
-links = pd.read_csv(os.path.join(INPUT_DIR, "links.csv"))
-code = pd.read_csv(os.path.join(INPUT_DIR, "code_examples.csv"))
+sections = pd.read_csv(INPUT_DIR / "sections.csv")
+links = pd.read_csv(INPUT_DIR / "links.csv")
+code = pd.read_csv(INPUT_DIR / "code_examples.csv")
 
 def chart_top10_sections():
     top10 = sections.sort_values(by="word_count",ascending=False).head(10)
@@ -25,12 +28,12 @@ def chart_top10_sections():
     plt.tight_layout()
 
     plt.savefig(f"{OUTPUT_DIR}/top10_sections.png")
-    plt.close()
+    plt.show()
 
 def chart_code_examples():
     counts = code.groupby("section_title").size()
 
-    plt.figure(figsize=(40,6))
+    plt.figure(figsize=(60,8))
 
     plt.bar(counts.index, counts.values)
 
@@ -42,27 +45,33 @@ def chart_code_examples():
     plt.tight_layout()
 
     plt.savefig(f"{OUTPUT_DIR}/code_examples_by_section.png")
-    plt.close()
+    plt.show()
 
 def chart_link_distribution():
     types = links["link_type"].value_counts()
-
     plt.figure(figsize=(7,7))
-
-    plt.pie(
+    wedges, texts, autotexts = plt.pie(
         types,
-        labels=types.index,
-        autopct="%1.1f%%",
+        autopct=lambda p: f"{p:.1f}%" if p >= 1 else "",
         startangle=90
     )
 
+    plt.legend(
+        wedges,
+        ["Internal", "External", "Documentation"],
+        title="Link Type",
+        loc="center left",
+        bbox_to_anchor=(1, 0.5)
+    )
+
+    plt.tight_layout()
     plt.title("Link Type Distribution")
 
     plt.savefig(f"{OUTPUT_DIR}/link_distribution.png")
-    plt.close()
+    plt.show()
 
 def chart_code_length_histogram():
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10,15))
 
     plt.hist(
         code["line_count"],
@@ -76,7 +85,7 @@ def chart_code_length_histogram():
     plt.tight_layout()
 
     plt.savefig(f"{OUTPUT_DIR}/code_length_histogram.png")
-    plt.close()
+    plt.show()
 
 if __name__ == "__main__":
     chart_top10_sections()

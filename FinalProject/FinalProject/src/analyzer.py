@@ -35,22 +35,18 @@ def load_data():
 #Q1
 def sections_count():
     section_quantity = df["section_id"].count()
-    print(section_quantity)
     return section_quantity
 #Q2
 def section_with_longest_count():
     longest_section = df.loc[df["word_count"].idxmax()]
-    print(longest_section)
     return longest_section
 #Q3
 def section_with_most_code_examples():
     most_code_section = df.loc[df["code_block_count"].idxmax()]
-    print(most_code_section)
     return most_code_section
 #Q4
 def section_contains_most_links():
     most_links_section = df.loc[df["link_count"].idxmax()]
-    print(most_links_section)
     return most_links_section
 #Q5
 def top_ten_technical_keyword():
@@ -62,25 +58,20 @@ def top_ten_technical_keyword():
                 word_count[word] += 1
 
     top_ten = word_count.most_common(10)
-    print(top_ten)
     return top_ten
 #Q6
 def count_internal_and_external_links():
     internal_links = (df2["link_type"] == "internal_anchor").sum()
     external_links = (df2["link_type"] == "external_link").sum()
 
-    print(internal_links)
-    print(external_links)
     return internal_links, external_links
 #Q7
 def count_find_all():
     count = df3["contains_find_all"].sum()
-    print(count)
     return count
 #Q8
 def count_get_text():
     count = df3["contains_get_text"].sum()
-    print(count)
     return count
   
 #2 additions
@@ -93,10 +84,6 @@ def word_count_statistics():
     maximum = np.max(words)
     std_dev = np.std(words)
 
-    print("Average:", average)
-    print("Minimum:", minimum)
-    print("Maximum:", maximum)
-    print("Standard deviation:", std_dev)
     return average, minimum, maximum, std_dev
 
 #Q10. Which sections are longer than the average section?
@@ -105,7 +92,6 @@ def sections_above_average():
 
     result = df[df["word_count"] > avg]
 
-    print(result[["section_title", "word_count"]])
     return result[["section_title", "word_count"]]
 
 
