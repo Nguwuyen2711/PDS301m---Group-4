@@ -155,7 +155,7 @@ def export_links_to_csv(link_rows, filename):
     df = pd.DataFrame(link_rows)
     for column in df.columns:
         if df[column].dtype == "object":
-            df[column] = df[column].apply(_normalize_text)
+            df[column] = df[column].apply(lambda text: _normalize_text(text).replace("¶", ""))
     expected_columns = ["link_text", "href", "link_type", "section_title"]
     for column in expected_columns:
         if column not in df.columns:
