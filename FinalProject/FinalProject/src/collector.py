@@ -6,7 +6,6 @@ URL = "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
-RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 HTML_PATH = RAW_DIR / "beautifulsoup_doc.html"
 
@@ -14,9 +13,7 @@ def download_documentation():
 
     os.makedirs("data/raw", exist_ok=True)
 
-    print("=" * 50)
     print("FEATURE 1 - WEB PAGE COLLECTOR")
-    print("=" * 50)
 
     try:
 

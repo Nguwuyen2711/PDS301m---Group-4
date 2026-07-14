@@ -19,9 +19,7 @@ def _read_html_text(path):
 
 def parse_html(verbose=True):
     if verbose:
-        print("\n" + "=" * 50)
         print("FEATURE 2 - HTML PARSER")
-        print("=" * 50)
 
     html = _read_html_text(HTML_PATH)
 
