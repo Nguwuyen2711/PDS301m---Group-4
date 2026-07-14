@@ -1,7 +1,7 @@
 try:
     from .collector import download_documentation
     from .parser import parse_html as parse_html_document
-    from .Extractor import (
+    from .extractor import (
         export_examples_to_csv,
         export_links_to_csv,
         export_sections_to_csv,
@@ -13,7 +13,7 @@ try:
 except ImportError:
     from collector import download_documentation
     from parser import parse_html as parse_html_document
-    from Extractor import (
+    from extractor import (
         export_examples_to_csv,
         export_links_to_csv,
         export_sections_to_csv,

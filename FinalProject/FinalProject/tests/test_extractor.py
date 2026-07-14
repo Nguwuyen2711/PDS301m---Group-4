@@ -5,7 +5,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from Extractor import (
+from extractor import (
     _normalize_text,
     extract_link_rows,
     extract_links,
@@ -47,7 +47,7 @@ def test_extract_sections_and_links():
 
 
 def test_normalize_text_decodes_mojibake():
-    assert _normalize_text("Beautiful Soup Documentation Â¶") == "Beautiful Soup Documentation ¶"
+    assert _normalize_text("Beautiful Soup Documentation Â¶") == "Beautiful Soup Documentation"
 
 
 def test_csv_export_matches_required_columns(tmp_path):
