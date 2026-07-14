@@ -1,7 +1,7 @@
-import os
 from pathlib import Path
 
 import pandas as pd
+from pandas.api.types import is_object_dtype, is_string_dtype
 from bs4 import BeautifulSoup
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -9,17 +9,19 @@ RAW_DIR = PROJECT_ROOT / "data" / "processed"
 RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 def _normalize_text(value):
+    text = value
     if value is None:
         return ""
     if isinstance(value, str):
-        text = value
         if "Â" in text or "â" in text:
             try:
                 text = text.encode("latin-1").decode("utf-8")
             except UnicodeError:
                 pass
-        return text.replace("Â¶", "¶").replace("â¶", "¶")
-    return str(value)
+        return text.replace("Â¶", "").replace("â¶", "").replace("¶", "").strip()
+    else:
+        text = str(value).replace("¶", "").strip()
+    return text
 
 
 def _ensure_soup(html_or_soup):
@@ -129,7 +131,7 @@ def export_sections_to_csv(sections, filename):
 
     df = pd.DataFrame(sections)
     for column in df.columns:
-        if df[column].dtype == "object":
+        if is_object_dtype(df[column]) or is_string_dtype(df[column]):
             df[column] = df[column].apply(_normalize_text)
     expected_columns = [
         "section_id",
@@ -154,16 +156,10 @@ def export_links_to_csv(link_rows, filename):
 
     df = pd.DataFrame(link_rows)
 
-    def _clean_link_value(value):
-        cleaned = _normalize_text(value)
-        return cleaned.replace("¶", "")
-
-    def _clean_column(column):
-        if column.dtype == object or pd.api.types.is_string_dtype(column.dtype):
-            return column.map(_clean_link_value)
-        return column
-
-    df = df.apply(_clean_column)
+    for column in df.columns:
+        if is_object_dtype(df[column]) or is_string_dtype(df[column]):
+            df[column] = df[column].apply(_normalize_text)
+            
     expected_columns = ["link_text", "href", "link_type", "section_title"]
     for column in expected_columns:
         if column not in df.columns:
@@ -208,7 +204,7 @@ def export_examples_to_csv(sections, filename):
 
     df = pd.DataFrame(sections)
     for column in df.columns:
-        if df[column].dtype == "object":
+        if is_object_dtype(df[column]) or is_string_dtype(df[column]):
             df[column] = df[column].apply(_normalize_text)
     expected_columns = [
         "example_id",
