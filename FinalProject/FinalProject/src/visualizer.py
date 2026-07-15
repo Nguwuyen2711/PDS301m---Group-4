@@ -41,15 +41,20 @@ def chart_top10_sections():
     plt.show()
 
 def chart_code_examples():
-    counts = code.groupby("section_title").size()
+    counts = (
+    code.groupby("section_title")
+    .size()
+    .nlargest(20)
+    .sort_values(ascending=True)
+    )
 
-    plt.figure(figsize=(60,8))
+    plt.figure(figsize=(12,6))
 
-    plt.bar(counts.index, counts.values)
+    plt.barh(counts.index, counts.values)
 
-    plt.title("Code Examples by Section")
-    plt.xlabel("Section")
-    plt.ylabel("Examples")
+    plt.title("Top 20 Sections by Code Examples")
+    plt.ylabel("Section")
+    plt.xlabel("Examples")
 
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
@@ -81,7 +86,7 @@ def chart_link_distribution():
     plt.show()
 
 def chart_code_length_histogram():
-    plt.figure(figsize=(10,15))
+    plt.figure(figsize=(10,7))
 
     plt.hist(
         code["line_count"],
