@@ -108,4 +108,4 @@ https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
 ## License
 
-This project is developed for educational purposes as part of the PDS301 course.
+This project is developed for educational purposes as part of the PDS301m course.
