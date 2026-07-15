@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import re
 from collections import Counter
 
@@ -7,6 +8,10 @@ import pandas as pd
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+EXCEL_OUTPUT_DIR = PROJECT_ROOT / "output" 
+os.makedirs(EXCEL_OUTPUT_DIR, exist_ok=True)
 
 STOPWORDS = {
     "the", "a", "an", "and", "or", "but", "is", "are", "was", "were", "be",
@@ -94,17 +99,81 @@ def sections_above_average():
 
     return result[["section_title", "word_count"]]
 
+def export_to_excel():
+    output_dir = EXCEL_OUTPUT_DIR
+    output_file = output_dir / "analysis_results.xlsx"
 
-# if __name__ == "__main__":
-#     load_data()
+    q1 = pd.DataFrame({
+        "section_count": [sections_count()]
+    })
 
-#     sections_count()
-#     section_with_longest_count()
-#     section_with_most_code_examples()
-#     section_contains_most_links()
-#     top_ten_technical_keyword()
-#     count_internal_and_external_links()
-#     count_find_all()
-#     count_get_text()
-#     word_count_statistics()
-#     sections_above_average()
+    q2 = section_with_longest_count().to_frame().T
+    q3 = section_with_most_code_examples().to_frame().T
+    q4 = section_contains_most_links().to_frame().T
+
+    q5 = pd.DataFrame(
+        top_ten_technical_keyword(),
+        columns=["keyword", "frequency"]
+    )
+
+    internal_links, external_links = count_internal_and_external_links()
+
+    q6 = pd.DataFrame({
+        "link_type": ["Internal", "External"],
+        "count": [internal_links, external_links]
+    })
+
+    q7 = pd.DataFrame({
+        "contains_find_all_count": [count_find_all()]
+    })
+
+    q8 = pd.DataFrame({
+        "contains_get_text_count": [count_get_text()]
+    })
+
+    average, minimum, maximum, std_dev = word_count_statistics()
+
+    q9 = pd.DataFrame({
+        "statistic": [
+            "Average",
+            "Minimum",
+            "Maximum",
+            "Standard Deviation"
+        ],
+        "value": [
+            average,
+            minimum,
+            maximum,
+            std_dev
+        ]
+    })
+
+    q10 = sections_above_average()
+
+    with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
+        q1.to_excel(writer, sheet_name="Q1 Section Count", index=False)
+        q2.to_excel(writer, sheet_name="Q2 Longest Section", index=False)
+        q3.to_excel(writer, sheet_name="Q3 Most Code", index=False)
+        q4.to_excel(writer, sheet_name="Q4 Most Links", index=False)
+        q5.to_excel(writer, sheet_name="Q5 Top Keywords", index=False)
+        q6.to_excel(writer, sheet_name="Q6 Link Counts", index=False)
+        q7.to_excel(writer, sheet_name="Q7 Find All", index=False)
+        q8.to_excel(writer, sheet_name="Q8 Get Text", index=False)
+        q9.to_excel(writer, sheet_name="Q9 Word Statistics", index=False)
+        q10.to_excel(writer, sheet_name="Q10 Above Average", index=False)
+
+    print(f"Excel file exported successfully: {output_file}")
+   
+if __name__ == "__main__":
+    load_data()
+    export_to_excel()
+    sections_count()
+    section_with_longest_count()
+    section_with_most_code_examples()
+    section_contains_most_links()
+    top_ten_technical_keyword()
+    count_internal_and_external_links()
+    count_find_all()
+    count_get_text()
+    word_count_statistics()
+    sections_above_average()
