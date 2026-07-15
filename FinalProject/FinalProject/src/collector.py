@@ -29,7 +29,7 @@ def download_documentation():
                 file.write(content)
 
             print("Download completed.")
-            print("Saved to:", HTML_PATH)
+           
 
         else:
 
